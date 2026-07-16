@@ -1,2 +1,4 @@
-Rule-based-AI-chatbot
-I developed an AI chatbot using Python, HTML and Flask in Visual Studio Code. I created the frontend with HTML/CSS/JavaScript and the backend with Flask. I'm currently adding AI integration and improving the features.
+
+Rule-Based AI Chatbot
+
+Developed a rule-based AI chatbot using Python, Flask, HTML, and CSS in Visual Studio Code. Designed and implemented the frontend user interface and backend logic to provide interactive chatbot responses. Integrated Flask to connect the user interface with the chatbot engine. Currently enhancing the project by adding AI-based functionalities and improving the chatbot's features for a better user experience.
