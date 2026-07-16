@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Chatbot</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .chat-container {
+    width: 400px;
+    max-width: 95vw;
+    height: 600px;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .chat-header {
+    background: #d14a51;
+    color: #d2e8fa;
+    padding: 16px 20px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #f7f7fa;
+  }
+  .message {
+    max-width: 75%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+  .message.user {
+    align-self: flex-end;
+    background: #4a5fd1;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .message.bot {
+    align-self: flex-start;
+    background: #e5e5ea;
+    color: #222;
+    border-bottom-left-radius: 4px;
+  }
+  .typing {
+    align-self: flex-start;
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+    background: #e5e5ea;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+  }
+  .typing span {
+    width: 6px;
+    height: 6px;
+    background: #999;
+    border-radius: 50%;
+    animation: blink 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.3; }
+    40% { opacity: 1; }
+  }
+  .chat-input {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+  }
+  .chat-input input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+  }
+  .chat-input input:focus {
+    border-color: #4a5fd1;
+  }
+  .chat-input button {
+    margin-left: 8px;
+    padding: 10px 18px;
+    border: none;
+    background: #4a5fd1;
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .chat-input button:hover {
+    background: #3a4bb0;
+  }
+  .chat-input button:disabled {
+    background: #aab;
+    cursor: not-allowed;
+  }
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-header">AI Chatbot</div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="message bot">Hi! I'm a simple demo chatbot. Ask me something.</div>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type a message..." autocomplete="off">
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+<script>
+  const chatMessages = document.getElementById('chatMessages');
+  const userInput = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  function addMessage(text, sender) {
+    const msg = document.createElement('div');
+    msg.className = 'message ' + sender;
+    msg.textContent = text;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function showTyping() {
+    const typing = document.createElement('div');
+    typing.className = 'typing';
+    typing.id = 'typingIndicator';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(typing);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function hideTyping() {
+    const typing = document.getElementById('typingIndicator');
+    if (typing) typing.remove();
+  }
+
+  async function getBotResponse(message) {
+    await new Promise(r => setTimeout(r, 600));
+
+    const lower = message.toLowerCase();
+    if (lower.includes('hello') || lower.includes('hi')) {
+      return "Hello there! How can I help you today?";
+    } else if (lower.includes('name')) {
+      return "I'm a demo chatbot built with plain HTML, CSS, and JavaScript.";
+    } else if (lower.includes('help')) {
+      return "I can chat with you! Try asking me about my name, or just say hi.";
+    } else if (lower.includes('bye')) {
+      return "Goodbye! Have a great day.";
+    } else {
+      return "That's interesting! (This is a demo response — connect me to a real AI API for smarter replies.)";
+    }
+  }
+
+  async function handleSend() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    addMessage(text, 'user');
+    userInput.value = '';
+    sendBtn.disabled = true;
+
+    showTyping();
+    const reply = await getBotResponse(text);
+    hideTyping();
+
+    addMessage(reply, 'bot');
+    sendBtn.disabled = false;
+    userInput.focus();
+  }
+
+  sendBtn.addEventListener('click', handleSend);
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSend();
+  });
+</script>
+</body>
+</html>
